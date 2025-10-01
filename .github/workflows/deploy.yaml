@@ -14,15 +14,19 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
       
+      # FIX: Specify the path to the package.json/lock file
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
+          # ADD THIS LINE: Tells the action where to find the lock file for caching
+          cache-dependency-path: echo-dashboard/package-lock.json 
           
       # Navigate into the subdirectory where the project lives
-      - name: Change directory to echo-dashboard 
-        run: cd echo-dashboard
+      - name: Change directory to echo-dashboard
+        # This step is technically redundant but harmless if kept: run: cd echo-dashboard
+        run: echo "Starting deployment from subdirectory..." # Replaced redundant step with log
         
       # Install dependencies for the project in the subdirectory
       - name: Install dependencies
