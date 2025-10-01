@@ -1,0 +1,44 @@
+# .github/workflows/deploy.yml
+
+name: Deploy Vite Subdirectory to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # Trigger on push to the 'main' branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      # Navigate into the subdirectory where the project lives
+      - name: Change directory to echo-dashboard
+        run: cd echo-dashboard
+        
+      # Install dependencies for the project in the subdirectory
+      - name: Install dependencies
+        run: npm install
+        working-directory: echo-dashboard # Run command in the project directory
+        
+      # Build the React application (npm run build runs 'vite build')
+      - name: Build 🛠️
+        run: npm run build
+        working-directory: echo-dashboard # Run command in the project directory
+        
+      # Deploy the 'dist' folder from the subdirectory
+      - name: Deploy 🚀
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # Publish the output folder (Vite's 'dist') from the subdirectory
+          publish_dir: ./echo-dashboard/dist 
+          force_orphan: true
