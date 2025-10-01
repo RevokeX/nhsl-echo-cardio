@@ -50,10 +50,10 @@ export const FORM_FIELDS = [
     { name: 'Pre-Op Specify', label: 'Pre-Op Specify', type: 'text', section: PATIENT_INFO_HEADING, isConditional: true, conditionField: 'Indication', conditionValue: PRE_OP_OPTION_VALUE, placeholder: 'Specify pre-operative assessment details' },
 
     // --- LV Dimentions and Systolic Assessment ---
-    { name: 'LV EDD', label: 'LV EDD', type: 'number', section: LV_DIMENSIONS_HEADING, isConditional: false, suffix: 'cm' },
-    { name: 'LV ESD', label: 'LV ESD', type: 'number', section: LV_DIMENSIONS_HEADING, isConditional: false, suffix: 'cm' },
-    { name: 'IVSd', label: 'IVSd', type: 'number', section: LV_DIMENSIONS_HEADING, isConditional: false, suffix: 'cm' },
-    { name: 'pwD', label: 'LVPWd', type: 'number', section: LV_DIMENSIONS_HEADING, isConditional: false, suffix: 'cm' },
+    { name: 'LV EDD', label: 'LV EDD', type: 'number', section: LV_DIMENSIONS_HEADING, isConditional: false, suffix: 'mm' },
+    { name: 'LV ESD', label: 'LV ESD', type: 'number', section: LV_DIMENSIONS_HEADING, isConditional: false, suffix: 'mm' },
+    { name: 'IVSd', label: 'IVSd', type: 'number', section: LV_DIMENSIONS_HEADING, isConditional: false, suffix: 'mm' },
+    { name: 'pwD', label: 'LVPWd', type: 'number', section: LV_DIMENSIONS_HEADING, isConditional: false, suffix: 'mm' },
     { name: 'EF', label: 'EF', type: 'number', section: LV_DIMENSIONS_HEADING, isConditional: false, suffix: '%' },
     { name: 'RWMA', label: 'RWMA', type: 'select', section: LV_DIMENSIONS_HEADING, isConditional: false,
         options: ['None', 'Anterior', 'Septal', 'Lateral', 'Apical', 'Inferior', 'Posterior', 'Basal']
@@ -135,9 +135,9 @@ export const FORM_FIELDS = [
     { name: 'Aortic regurgitation', label: 'Aortic regurgitation', type: 'select', section: AORTIC_HEADING, isConditional: false,
         options: ['1. No', '2. Mild', '3. Moderate', '4. Severe']
     },
-    { name: 'AI P1/2', label: 'AI P1/2', type: 'number', section: AORTIC_HEADING, isConditional: false },
-    { name: 'LVOT diamater', label: 'LVOT diamater', type: 'number', section: AORTIC_HEADING, isConditional: false, suffix: 'cm' },
-    { name: 'Regurgitant jet width', label: 'Regurgitant jet width', type: 'number', section: AORTIC_HEADING, isConditional: false },
+    { name: 'AI P1/2', label: 'AI P1/2', type: 'number', section: AORTIC_HEADING, isConditional: false,suffix: 'm/s' },
+    { name: 'LVOT diamater', label: 'LVOT diamater', type: 'number', section: AORTIC_HEADING, isConditional: false, suffix: 'mm' },
+    { name: 'Regurgitant jet width', label: 'Regurgitant jet width', type: 'number', section: AORTIC_HEADING, isConditional: false,suffix: 'mm' },
     { name: 'Jet width/ LOVT diameter', label: 'Jet width/ LOVT diameter', type: 'number', section: AORTIC_HEADING, isConditional: false },
     { name: 'Diastolic flow reversal in decending aorta', label: 'Diastolic flow reversal in decending aorta', type: 'select', section: AORTIC_HEADING, isConditional: false,
         options: ['1. Present', '2. Absent']
