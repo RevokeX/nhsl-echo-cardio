@@ -77,7 +77,7 @@ export const FORM_FIELDS = [
 
     // --- Chamber Dimensions and Function ---
     { name: 'LA', label: 'LA', type: 'select', section: CHAMBER_HEADING, isConditional: false,
-        options: ['1. Normal', '2, Dilated', '3. Giant']
+        options: ['1. Normal', '2. Dilated', '3. Giant']
     },
     { name: 'LA diameter', label: 'LA diameter', type: 'number', section: CHAMBER_HEADING, isConditional: false, suffix: 'cm' },
     { name: 'LA Comments', label: 'LA Comments', type: 'text', section: CHAMBER_HEADING, isConditional: false, placeholder: 'Any specific LA findings' },

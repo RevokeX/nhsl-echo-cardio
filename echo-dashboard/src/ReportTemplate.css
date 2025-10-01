@@ -1,57 +1,78 @@
 /* Styles for the PDF Report Template */
 .report-container {
   width: 210mm; /* A4 width */
-  min-height: 297mm; /* A4 height */
-  padding: 20mm;
+  min-height: 297mm; /* A4 height, use min-height to allow content to expand */
+  padding: 5mm;
   background-color: white;
   color: #333;
   font-family: Arial, sans-serif;
   box-sizing: border-box;
+  font-size: 8pt; /* A standard font size for reports */
 }
 
 .report-header h1 {
   color: #1a4e72;
   text-align: center;
   margin: 0;
-  padding-bottom: 10px;
+  padding-bottom: 5px;
+  font-size: 1.5em;
 }
 
 hr {
   border: 0;
   border-top: 1px solid #e0e5e8;
-  margin: 20px 0;
+  margin: 15px 0;
+}
+
+section {
+  margin-bottom: 10px;
 }
 
 h2 {
   color: #3b749d;
   border-bottom: 2px solid #e0e5e8;
   padding-bottom: 5px;
-  margin-top: 25px;
+  margin-top: 20px;
   margin-bottom: 15px;
-  font-size: 1.2em;
+  font-size: 1.3em;
 }
 
-.patient-info .info-grid {
+/* Grid layout for the fields */
+.field-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  grid-template-columns: 1fr 1fr; /* Two-column layout */
+  gap: 8px 20px; /* Row and column gap */
 }
 
-.finding-item {
-  margin-bottom: 15px;
+/* Styling for each "Label: Value" pair */
+.field-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px;
+  border-bottom: 1px dotted #ccc;
 }
 
-.finding-item strong {
+.field-item strong {
   color: #1a4e72;
+  padding-right: 10px;
 }
 
-.finding-item p {
-  margin: 5px 0 0 0;
-  padding-left: 10px;
+.field-item span {
+  text-align: right;
+  color: #555;
 }
 
-.conclusion p {
-  line-height: 1.5;
+/* Make single-line text inputs (like summaries) span both columns */
+.field-item[data-span="true"] {
+  grid-column: span 2;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.field-item[data-span="true"] span {
+  text-align: left;
+  margin-top: 5px;
+  width: 100%;
 }
 
 .report-footer {

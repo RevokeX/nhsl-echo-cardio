@@ -114,31 +114,45 @@ const EchoReportForm = () => {
             return;
         }
 
-        html2canvas(input)
-            .then((canvas) => {
-                const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF({
-                    orientation: 'portrait',
-                    unit: 'mm',
-                    format: 'a4'
-                });
-
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = pdf.internal.pageSize.getHeight();
-                const canvasWidth = canvas.width;
-                const canvasHeight = canvas.height;
-                
-                // Calculate the ratio to fit the image onto the A4 page
-                const ratio = Math.min(pdfWidth / canvasWidth, pdfHeight / canvasHeight);
-                const imgWidth = canvasWidth * ratio;
-                const imgHeight = canvasHeight * ratio;
-
-                pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-                
-                // Use patient's name or ID for the filename
-                const fileName = `EchoReport_${formData['Name'] || formData['ID'] || 'Patient'}.pdf`;
-                pdf.save(fileName);
+        html2canvas(input, {
+            scale: 2,
+            useCORS: true
+        }).then((canvas) => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4'
             });
+
+            // --- MULTI-PAGE LOGIC ---
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+            const canvasWidth = canvas.width;
+            const canvasHeight = canvas.height;
+            const canvasAspectRatio = canvasHeight / canvasWidth;
+            
+            // Calculate the total height the image will take up in the PDF
+            const totalPDFHeight = pdfWidth * canvasAspectRatio;
+
+            let heightLeft = totalPDFHeight;
+            let position = 0;
+
+            // 1. Add the first page
+            pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, totalPDFHeight);
+            heightLeft -= pdfHeight;
+
+            // 2. Add new pages as long as there is content left
+            while (heightLeft > 0) {
+                position = position - pdfHeight; // Move the image "up" on the page
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, totalPDFHeight);
+                heightLeft -= pdfHeight;
+            }
+            
+            const fileName = `EchoReport_${formData['Name'] || formData['ID'] || 'Patient'}.pdf`;
+            pdf.save(fileName);
+        });
     };
 
     // --- REFACTORED: Data preparation for rendering ---
