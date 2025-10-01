@@ -175,7 +175,6 @@ const EchoReportForm = () => {
             </div>
 
             <h1>New Echo Report Entry</h1>
-            <p className="description">Enter the patient's demographic and cardiac measurement details below.</p>
             
             <form onSubmit={handleSubmit} className="echo-report-form"> 
                 
