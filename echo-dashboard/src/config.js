@@ -2,7 +2,7 @@
 
 // --- SECTION HEADINGS ---
 export const PATIENT_INFO_HEADING = 'Patient Information';
-export const LV_DIMENSIONS_HEADING = 'LV Dimentions and Systolic Assessment';
+export const LV_DIMENSIONS_HEADING = 'LV Dimensions and Systolic Assessment';
 export const DIASTOLIC_HEADING = 'LV Diastolic Function Assessment';
 export const CHAMBER_HEADING = 'Chamber Dimensions and Function';
 export const MITRAL_HEADING = 'Mitral Valve Assessment';
@@ -72,7 +72,7 @@ export const FORM_FIELDS = [
     { name: 'Medial wall e\'', label: 'Medial wall e\'', type: 'number', section: DIASTOLIC_HEADING, isConditional: false, suffix: 'cm/s' },
     { name: 'E/e\'', label: 'E/e\'', type: 'number', section: DIASTOLIC_HEADING, isConditional: false },
     { name: 'Diastolic Comment', label: 'LV Diastolic Function Comment', type: 'select', section: DIASTOLIC_HEADING, isConditional: false,
-        options: ['1. No diastolic dysfunction', '2. Grade 1 diastolic dysfunction', '3. Grade 2 diastolic dysfunction', '3. Grade 3 diastolic dysfunction']
+        options: ['1. No diastolic dysfunction', '2. Grade 1 diastolic dysfunction', '3. Grade 2 diastolic dysfunction', '4. Grade 3 diastolic dysfunction']
     },
 
     // --- Chamber Dimensions and Function ---
@@ -85,9 +85,11 @@ export const FORM_FIELDS = [
         options: ['1. Normal', '2, Dilated']
     },
     { name: 'RA diameter', label: 'RA diameter', type: 'number', section: CHAMBER_HEADING, isConditional: false, suffix: 'cm' },
+        { name: 'RA Comments', label: 'RA Comments', type: 'text', section: CHAMBER_HEADING, isConditional: false, placeholder: 'Any specific RA findings' },
     { name: 'RV', label: 'RV', type: 'select', section: CHAMBER_HEADING, isConditional: false,
         options: ['1. Normal', '2. Dilated', '3. RV hypertrophy']
     },
+        { name: 'RV Comments', label: 'RV Comments', type: 'text', section: CHAMBER_HEADING, isConditional: false, placeholder: 'Any specific RV findings' },
     { name: 'TAPSE', label: 'TAPSE', type: 'number', section: CHAMBER_HEADING, isConditional: false, suffix: 'cm', tooltip: 'Tricuspid Annular Plane Systolic Excursion' },
 
     // --- Mitral Valve Assessment ---
@@ -99,7 +101,7 @@ export const FORM_FIELDS = [
     },
     { name: 'MV Comment on vegetation', label: 'Comment on vegetation', type: 'text', section: MITRAL_HEADING, isConditional: false, placeholder: 'Detailed description of vegetation' },
     { name: 'Mitral Regurgitation', label: 'Mitral Regurgitation', type: 'select', section: MITRAL_HEADING, isConditional: false,
-        options: ['1. No', '2. Trivail', '3. Mild', '4. Moderate', '5. Severe']
+        options: ['1. No', '2. Trivial', '3. Mild', '4. Moderate', '5. Severe']
     },
     { name: 'VC', label: 'VC', type: 'number', section: MITRAL_HEADING, isConditional: false, suffix: 'cm' },
     { name: 'EROA (PISA)', label: 'EROA (PISA)', type: 'number', section: MITRAL_HEADING, isConditional: false, suffix: 'cm²' },
@@ -139,14 +141,16 @@ export const FORM_FIELDS = [
     { name: 'LVOT diamater', label: 'LVOT diamater', type: 'number', section: AORTIC_HEADING, isConditional: false, suffix: 'mm' },
     { name: 'Regurgitant jet width', label: 'Regurgitant jet width', type: 'number', section: AORTIC_HEADING, isConditional: false,suffix: 'mm' },
     { name: 'Jet width/ LOVT diameter', label: 'Jet width/ LOVT diameter', type: 'number', section: AORTIC_HEADING, isConditional: false },
-    { name: 'Diastolic flow reversal in decending aorta', label: 'Diastolic flow reversal in decending aorta', type: 'select', section: AORTIC_HEADING, isConditional: false,
+    { name: 'Diastolic flow reversal in decending aorta', label: 'Diastolic flow reversal in decending aorta', type: 'select', section: AORTIC_HEADING,  isConditional: true, 
+        conditionField: 'Aortic regurgitation', 
+        conditionValue: ['2. Mild', '3. Moderate', '4. Severe'],
         options: ['1. Present', '2. Absent']
     },
     { name: 'Aortic stenosis', label: 'Aortic stenosis', type: 'select', section: AORTIC_HEADING, isConditional: false,
         options: ['1. No', '2. Mild', '3. Moderate', '4. Severe']
     },
     { name: 'Aortic valve maximum pressure gradient', label: 'Aortic valve maximum pressure gradient', type: 'number', section: AORTIC_HEADING, isConditional: false, suffix: 'mmHg' },
-    { name: 'Aortic valve minimum pressure gradient', label: 'Aortic valve minimum pressure gradient', type: 'number', section: AORTIC_HEADING, isConditional: false, suffix: 'mmHg' },
+    { name: 'Aortic valve mean pressure gradient', label: 'Aortic valve mean pressure gradient', type: 'number', section: AORTIC_HEADING, isConditional: false, suffix: 'mmHg' },
     { name: 'Aortic valve VTI', label: 'Aortic valve VTI', type: 'number', section: AORTIC_HEADING, isConditional: false, suffix: 'cm' },
     { name: 'LVOT VTI', label: 'LVOT VTI', type: 'number', section: AORTIC_HEADING, isConditional: false, suffix: 'cm' },
     { name: 'LVOT Diameter', label: 'LVOT Diameter', type: 'number', section: AORTIC_HEADING, isConditional: false, suffix: 'cm' },
@@ -172,6 +176,7 @@ export const FORM_FIELDS = [
     { name: 'Tricuspid stenosis', label: 'Tricuspid stenosis', type: 'select', section: TRICUSPID_HEADING, isConditional: false,
         options: ['1. No', '2. Mild', '3. Moderate', '4. Severe']
     },
+     { name: 'TV Comments', label: 'TV Comments', type: 'text', section: TRICUSPID_HEADING, isConditional: false, placeholder: 'Any specific TV findings' },
 
     // --- Pulmonary Valve Assessment ---
     { name: 'Pulmonary valve', label: 'Pulmonary valve', type: 'select', section: PULMONARY_HEADING, isConditional: false,
@@ -190,6 +195,7 @@ export const FORM_FIELDS = [
     { name: 'Pulmonary regurgitation', label: 'Pulmonary regurgitation', type: 'select', section: PULMONARY_HEADING, isConditional: false,
         options: ['1. No', '2. Mild', '3. Moderate', '4. Severe']
     },
+         { name: 'PV Comments', label: 'PV Comments', type: 'text', section: PULMONARY_HEADING, isConditional: false, placeholder: 'Any specific PV findings' },
 
     // --- Septal Assessment ---
     { name: 'Intra atrial septum', label: 'Intra atrial septum', type: 'select', section: SEPTAL_HEADING, isConditional: false,
@@ -222,10 +228,11 @@ export const FORM_FIELDS = [
         isConditional: true, conditionField: 'Pericardium', conditionValue: EFFUSION_OPTIONS, suffix: 'mm', tooltip: 'Measured depth in millimeters' 
     },
     
-    { name: 'Conclusion', label: 'Conclusion', type: 'text', section: SUMMARY_HEADING, isConditional: false, placeholder: 'Overall final summary (Text Input)' },
+    
     { name: 'LV systolic function summary', label: 'LV systolic function summary', type: 'text', section: SUMMARY_HEADING, isConditional: false, placeholder: 'LV systolic function summary' },
     { name: 'LV diastolic function summary', label: 'LV diastolic function summary', type: 'text', section: SUMMARY_HEADING, isConditional: false, placeholder: 'LV diastolic function summary' },
     { name: 'Valves summary', label: 'Valves summary', type: 'text', section: SUMMARY_HEADING, isConditional: false, placeholder: 'Valves summary' },
+    { name: 'Conclusion', label: 'Conclusion', type: 'text', section: SUMMARY_HEADING, isConditional: false, placeholder: 'Overall final summary' },
     { name: 'Recommendation', label: 'Recommendation', type: 'select', section: SUMMARY_HEADING, isConditional: false,
         options: ['1. Follow up Echo in 1 year', '2. Follow up Echo in 2 years', '3. Follow up Echo in 6 months', '4. For cardiac intervention']
     },

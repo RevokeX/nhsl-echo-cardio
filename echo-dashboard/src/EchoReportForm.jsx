@@ -1,6 +1,8 @@
 /**
  * EchoReportForm.jsx
- * FIXED: Conditional Effusion Measurement fields now render immediately after the Pericardium field.
+ * REFACTORED: The rendering logic is now simplified. The component loops through all
+ * fields, and the InputRenderer component is responsible for handling the
+ * conditional visibility of each field.
  */
 import React, { useState, useEffect, useCallback } from 'react';
 import InputRenderer from './InputRenderer';
@@ -11,7 +13,7 @@ import {
     PRE_OP_OPTION_VALUE,
     PATIENT_INFO_HEADING,
     LV_DIMENSIONS_HEADING,
-    SUMMARY_HEADING // ADDED FOR CONDITIONAL RENDERING
+    SUMMARY_HEADING
 } from './config';
 import './index.css';
 
@@ -38,12 +40,10 @@ const EchoReportForm = () => {
     
     const SCORE_FIELDS = ['Score Thickening', 'Score Calcification', 'Score Sub valvular', 'Score Pliability'];
     
-    // Conditional state for Pericardium (used for logic in the summary section)
-    const hasPericardialEffusion = formData['Pericardium'] && formData['Pericardium'] !== '1. No effusion';
     const isIntervention = formData['Indication'] === INTERVENTION_OPTION_VALUE;
     const isPreOp = formData['Indication'] === PRE_OP_OPTION_VALUE;
 
-    // --- EFFECTS ---
+    // --- EFFECTS (Unchanged) ---
     useEffect(() => {
         const age = calculateAge(formData['DOB']);
         if (age.toString() !== formData['Age']) {
@@ -65,7 +65,7 @@ const EchoReportForm = () => {
     }, [formData['Score Thickening'], formData['Score Calcification'], formData['Score Sub valvular'], formData['Score Pliability']]);
 
 
-    // Handle input changes
+    // --- EVENT HANDLERS (Unchanged) ---
     const handleChange = useCallback((e) => {
         const { name, value } = e.target;
         const newValue = (name.startsWith('Score') || name === 'E' || name === 'A') ? (value === '' ? '' : value.toString()) : value;
@@ -77,7 +77,6 @@ const EchoReportForm = () => {
         setSubmissionMessage(null);
     }, []);
 
-    // Handle form submission and validation
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -102,37 +101,17 @@ const EchoReportForm = () => {
         setSubmissionMessage({ type: 'success', text: 'Echo Report details submitted successfully! (Check console for data)' });
     };
 
-    // --- Data preparation for rendering ---
-
-    // 1. Separate all conditional fields for easier lookup
-    const conditionalFields = FORM_FIELDS.filter(field => field.isConditional);
-
-    // 2. Group all *non-conditional* fields into sections
-    const sections = FORM_FIELDS
-        .filter(field => !field.isConditional)
-        .reduce((acc, field) => {
-            const sectionName = field.section;
-            if (!acc[sectionName]) {
-                acc[sectionName] = [];
-            }
-            acc[sectionName].push(field);
-            return acc;
-        }, {});
+    // --- REFACTORED: Data preparation for rendering ---
+    // Group ALL fields (including conditional ones) into sections.
+    const sections = FORM_FIELDS.reduce((acc, field) => {
+        const sectionName = field.section;
+        if (!acc[sectionName]) {
+            acc[sectionName] = [];
+        }
+        acc[sectionName].push(field);
+        return acc;
+    }, {});
     
-    // 3. Create an ordered list of all fields for the Summary section
-    const summaryFieldsInOrder = FORM_FIELDS.filter(f => f.section === SUMMARY_HEADING);
-    
-    // Function to render a single field using the external renderer
-    const renderField = (field) => (
-        <InputRenderer 
-            key={field.name} 
-            field={field} 
-            formData={formData} 
-            handleChange={handleChange} 
-        />
-    );
-
-
     // --- JSX RETURN (THE FORM LAYOUT) ---
     return (
         <div className="echo-report-container">
@@ -148,6 +127,7 @@ const EchoReportForm = () => {
                     </div>
                 )}
                 
+                {/* --- SIMPLIFIED: Rendering Loop --- */}
                 {Object.keys(sections).map(sectionName => {
                     if (sections[sectionName].length === 0) return null; 
 
@@ -161,50 +141,18 @@ const EchoReportForm = () => {
                             </h2>
                             
                             <div className="form-grid"> 
-                                
-                                {sectionName === SUMMARY_HEADING ? (
-                                    
-                                    // *** NEW LOGIC: Iterate over ALL Summary fields in order ***
-                                    summaryFieldsInOrder.map(field => {
-                                        if (!field.isConditional) {
-                                            // Render all non-conditional summary fields (Pericardium, Conclusion, etc.)
-                                            return renderField(field);
-                                        } 
-                                        
-                                        // Handle Pericardium conditional fields
-                                        if (field.conditionField === 'Pericardium' && hasPericardialEffusion) {
-                                            return renderField(field);
-                                        }
-                                        
-                                        return null;
-                                    })
-                                    
-                                ) : (
-                                    
-                                    // *** OLD LOGIC: Render non-conditional fields for all other sections ***
-                                    sections[sectionName].map(renderField)
-                                    
-                                )}
-                                
-                                {/* --- CONDITIONAL RENDERING BLOCK (Only needed for Patient Info now) --- */}
-                                {sectionName === PATIENT_INFO_HEADING && (
-                                    <>
-                                        {/* 1. Date of Intervention */}
-                                        {isIntervention && 
-                                            conditionalFields
-                                                .filter(f => f.conditionValue === INTERVENTION_OPTION_VALUE)
-                                                .map(renderField)
-                                        }
-                                        {/* 2. Pre-Op Specify */}
-                                        {isPreOp && 
-                                            conditionalFields
-                                                .filter(f => f.conditionValue === PRE_OP_OPTION_VALUE)
-                                                .map(renderField)
-                                        }
-                                    </>
-                                )}
-                                {/* REMOVED the old SUMMARY_HEADING conditional block here */}
-
+                                {/* This now maps over ALL fields for the section.
+                                  The InputRenderer component decides if a field should be
+                                  visible based on its own conditional logic.
+                                */}
+                                {sections[sectionName].map(field => (
+                                    <InputRenderer 
+                                        key={field.name} 
+                                        field={field} 
+                                        formData={formData} 
+                                        handleChange={handleChange} 
+                                    />
+                                ))}
                             </div>
                         </React.Fragment>
                     );
