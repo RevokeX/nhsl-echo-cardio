@@ -21,7 +21,7 @@ jobs:
           cache: 'npm'
           
       # Navigate into the subdirectory where the project lives
-      - name: Change directory to echo-dashboard
+      - name: Change directory to echo-dashboard 
         run: cd echo-dashboard
         
       # Install dependencies for the project in the subdirectory
