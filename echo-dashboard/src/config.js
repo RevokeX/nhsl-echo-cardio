@@ -227,7 +227,7 @@ export const FORM_FIELDS = [
     { name: 'LV diastolic function summary', label: 'LV diastolic function summary', type: 'text', section: SUMMARY_HEADING, isConditional: false, placeholder: 'LV diastolic function summary' },
     { name: 'Valves summary', label: 'Valves summary', type: 'text', section: SUMMARY_HEADING, isConditional: false, placeholder: 'Valves summary' },
     { name: 'Recommendation', label: 'Recommendation', type: 'select', section: SUMMARY_HEADING, isConditional: false,
-        options: ['1. Follow uo Echo in 1 year', '2. Follow up Echo in 2 years', '3. Follow up Echo in 6 months', '4. For cardiac intervention']
+        options: ['1. Follow up Echo in 1 year', '2. Follow up Echo in 2 years', '3. Follow up Echo in 6 months', '4. For cardiac intervention']
     },
 ];
 

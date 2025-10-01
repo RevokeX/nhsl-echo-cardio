@@ -1,20 +1,19 @@
 /**
  * EchoReportForm.jsx
- * FIXED: Updated import names and conditional logic to resolve SyntaxError.
- * ADDED: Conditional rendering for Pericardium (Effusion Measurement) fields.
+ * FIXED: Conditional Effusion Measurement fields now render immediately after the Pericardium field.
  */
 import React, { useState, useEffect, useCallback } from 'react';
 import InputRenderer from './InputRenderer';
 import { 
     FORM_FIELDS, 
     initialFormState, 
-    INTERVENTION_OPTION_VALUE, // <-- FIXED IMPORT NAME
-    PRE_OP_OPTION_VALUE,      // <-- FIXED IMPORT NAME
+    INTERVENTION_OPTION_VALUE,
+    PRE_OP_OPTION_VALUE,
     PATIENT_INFO_HEADING,
     LV_DIMENSIONS_HEADING,
-    SUMMARY_HEADING // <-- ADDED FOR CONDITIONAL RENDERING
+    SUMMARY_HEADING // ADDED FOR CONDITIONAL RENDERING
 } from './config';
-import './index.css'; // Ensure your custom styles are active again
+import './index.css';
 
 // --- UTILITY FUNCTION: AGE CALCULATION (Same as before) ---
 const calculateAge = (dobString) => {
@@ -37,38 +36,31 @@ const EchoReportForm = () => {
     const [formData, setFormData] = useState(initialFormState);
     const [submissionMessage, setSubmissionMessage] = useState(null); 
     
-    // The individual score fields used for the calculation
     const SCORE_FIELDS = ['Score Thickening', 'Score Calcification', 'Score Sub valvular', 'Score Pliability'];
+    
+    // Conditional state for Pericardium (used for logic in the summary section)
+    const hasPericardialEffusion = formData['Pericardium'] && formData['Pericardium'] !== '1. No effusion';
+    const isIntervention = formData['Indication'] === INTERVENTION_OPTION_VALUE;
+    const isPreOp = formData['Indication'] === PRE_OP_OPTION_VALUE;
 
-    // --- EFFECT: Autofill Age Logic ---
+    // --- EFFECTS ---
     useEffect(() => {
         const age = calculateAge(formData['DOB']);
         if (age.toString() !== formData['Age']) {
-            setFormData(prevData => ({
-                ...prevData,
-                'Age': age.toString()
-            }));
+            setFormData(prevData => ({ ...prevData, 'Age': age.toString() }));
         }
     }, [formData['DOB'], formData['Age']]);
 
-    // --- EFFECT: Calculate Mitral Valve Total Score ---
     useEffect(() => {
         let total = 0;
-        
         SCORE_FIELDS.forEach(field => {
             const value = parseFloat(formData[field]);
-            // Only add valid numbers (0-4)
             if (!isNaN(value) && value >= 0 && value <= 4) {
                 total += value;
             }
         });
-        
-        // Update the Total Score field if the calculated total changes
         if (total.toString() !== formData['Score Total']) {
-            setFormData(prevData => ({
-                ...prevData,
-                'Score Total': total.toString()
-            }));
+            setFormData(prevData => ({ ...prevData, 'Score Total': total.toString() }));
         }
     }, [formData['Score Thickening'], formData['Score Calcification'], formData['Score Sub valvular'], formData['Score Pliability']]);
 
@@ -76,7 +68,6 @@ const EchoReportForm = () => {
     // Handle input changes
     const handleChange = useCallback((e) => {
         const { name, value } = e.target;
-        // Ensure number fields are stored as strings or cleared if input is invalid
         const newValue = (name.startsWith('Score') || name === 'E' || name === 'A') ? (value === '' ? '' : value.toString()) : value;
 
         setFormData(prevData => ({
@@ -90,31 +81,33 @@ const EchoReportForm = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // 1. Basic Validation: 
+        // 1. Basic Validation
         if (!formData['Name'] || !formData['ID'] || !formData['DOB']) {
             setSubmissionMessage({ type: 'error', text: 'Please fill in Patient Name, Clinic ID, and Date of Birth.' });
             return;
         }
 
         // 2. Conditional Validation
-        // Uses INTERVENTION_OPTION_VALUE and PRE_OP_OPTION_VALUE
-        if (formData['Indication'] === INTERVENTION_OPTION_VALUE && !formData['Date of Intervention']) {
+        if (isIntervention && !formData['Date of Intervention']) {
              setSubmissionMessage({ type: 'error', text: 'Please enter the Date of Intervention.' });
             return;
         }
-        // Uses PRE_OP_OPTION_VALUE and CORRECTED field name 'Pre-Op Specify'
-        if (formData['Indication'] === PRE_OP_OPTION_VALUE && !formData['Pre-Op Specify']) { 
+        if (isPreOp && !formData['Pre-Op Specify']) { 
              setSubmissionMessage({ type: 'error', text: 'Please specify the reason for the Pre-Operative assessment.' });
             return;
         }
 
         // --- SUCCESS ---
         console.log('--- Form Data Submitted (Plain React, Scores Calculated) ---', formData);
-        
         setSubmissionMessage({ type: 'success', text: 'Echo Report details submitted successfully! (Check console for data)' });
     };
 
-    // Prepare fields for rendering by grouping and separating conditional fields
+    // --- Data preparation for rendering ---
+
+    // 1. Separate all conditional fields for easier lookup
+    const conditionalFields = FORM_FIELDS.filter(field => field.isConditional);
+
+    // 2. Group all *non-conditional* fields into sections
     const sections = FORM_FIELDS
         .filter(field => !field.isConditional)
         .reduce((acc, field) => {
@@ -125,8 +118,9 @@ const EchoReportForm = () => {
             acc[sectionName].push(field);
             return acc;
         }, {});
-
-    const conditionalFields = FORM_FIELDS.filter(field => field.isConditional);
+    
+    // 3. Create an ordered list of all fields for the Summary section
+    const summaryFieldsInOrder = FORM_FIELDS.filter(f => f.section === SUMMARY_HEADING);
     
     // Function to render a single field using the external renderer
     const renderField = (field) => (
@@ -166,38 +160,51 @@ const EchoReportForm = () => {
                                 )}
                             </h2>
                             
-                            {/* Reverting to the form-grid class for layout */}
                             <div className="form-grid"> 
-                                {sections[sectionName].map(renderField)}
                                 
-                                {/* --- CONDITIONAL RENDERING for Patient Information Section (Indication) --- */}
+                                {sectionName === SUMMARY_HEADING ? (
+                                    
+                                    // *** NEW LOGIC: Iterate over ALL Summary fields in order ***
+                                    summaryFieldsInOrder.map(field => {
+                                        if (!field.isConditional) {
+                                            // Render all non-conditional summary fields (Pericardium, Conclusion, etc.)
+                                            return renderField(field);
+                                        } 
+                                        
+                                        // Handle Pericardium conditional fields
+                                        if (field.conditionField === 'Pericardium' && hasPericardialEffusion) {
+                                            return renderField(field);
+                                        }
+                                        
+                                        return null;
+                                    })
+                                    
+                                ) : (
+                                    
+                                    // *** OLD LOGIC: Render non-conditional fields for all other sections ***
+                                    sections[sectionName].map(renderField)
+                                    
+                                )}
+                                
+                                {/* --- CONDITIONAL RENDERING BLOCK (Only needed for Patient Info now) --- */}
                                 {sectionName === PATIENT_INFO_HEADING && (
                                     <>
                                         {/* 1. Date of Intervention */}
-                                        {formData['Indication'] === INTERVENTION_OPTION_VALUE && 
+                                        {isIntervention && 
                                             conditionalFields
                                                 .filter(f => f.conditionValue === INTERVENTION_OPTION_VALUE)
                                                 .map(renderField)
                                         }
                                         {/* 2. Pre-Op Specify */}
-                                        {formData['Indication'] === PRE_OP_OPTION_VALUE && 
+                                        {isPreOp && 
                                             conditionalFields
                                                 .filter(f => f.conditionValue === PRE_OP_OPTION_VALUE)
                                                 .map(renderField)
                                         }
                                     </>
                                 )}
+                                {/* REMOVED the old SUMMARY_HEADING conditional block here */}
 
-                                {/* --- CONDITIONAL RENDERING for Summary Section (Pericardium/Effusion) --- */}
-                                {sectionName === SUMMARY_HEADING && (
-                                    <>
-                                        {/* Render all Pericardium-based conditional fields. InputRenderer handles the conditionValue array check. */}
-                                        {conditionalFields
-                                            .filter(f => f.conditionField === 'Pericardium')
-                                            .map(renderField)
-                                        }
-                                    </>
-                                )}
                             </div>
                         </React.Fragment>
                     );
