@@ -1,0 +1,62 @@
+/* Styles for the PDF Report Template */
+.report-container {
+  width: 210mm; /* A4 width */
+  min-height: 297mm; /* A4 height */
+  padding: 20mm;
+  background-color: white;
+  color: #333;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+.report-header h1 {
+  color: #1a4e72;
+  text-align: center;
+  margin: 0;
+  padding-bottom: 10px;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid #e0e5e8;
+  margin: 20px 0;
+}
+
+h2 {
+  color: #3b749d;
+  border-bottom: 2px solid #e0e5e8;
+  padding-bottom: 5px;
+  margin-top: 25px;
+  margin-bottom: 15px;
+  font-size: 1.2em;
+}
+
+.patient-info .info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.finding-item {
+  margin-bottom: 15px;
+}
+
+.finding-item strong {
+  color: #1a4e72;
+}
+
+.finding-item p {
+  margin: 5px 0 0 0;
+  padding-left: 10px;
+}
+
+.conclusion p {
+  line-height: 1.5;
+}
+
+.report-footer {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 0.8em;
+  color: #999;
+}

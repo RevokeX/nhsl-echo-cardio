@@ -4,7 +4,7 @@
  * fields, and the InputRenderer component is responsible for handling the
  * conditional visibility of each field.
  */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback,useRef } from 'react';
 import InputRenderer from './InputRenderer';
 import { 
     FORM_FIELDS, 
@@ -16,6 +16,9 @@ import {
     SUMMARY_HEADING
 } from './config';
 import './index.css';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import ReportTemplate from './ReportTemplate';
 
 // --- UTILITY FUNCTION: AGE CALCULATION (Same as before) ---
 const calculateAge = (dobString) => {
@@ -42,6 +45,8 @@ const EchoReportForm = () => {
     
     const isIntervention = formData['Indication'] === INTERVENTION_OPTION_VALUE;
     const isPreOp = formData['Indication'] === PRE_OP_OPTION_VALUE;
+
+    const reportTemplateRef = useRef(null);
 
     // --- EFFECTS (Unchanged) ---
     useEffect(() => {
@@ -101,6 +106,41 @@ const EchoReportForm = () => {
         setSubmissionMessage({ type: 'success', text: 'Echo Report details submitted successfully! (Check console for data)' });
     };
 
+    // --- NEW: PDF Generation Handler ---
+    const handleGeneratePdf = () => {
+        const input = reportTemplateRef.current;
+        if (!input) {
+            console.error("Report template not found.");
+            return;
+        }
+
+        html2canvas(input)
+            .then((canvas) => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                const canvasWidth = canvas.width;
+                const canvasHeight = canvas.height;
+                
+                // Calculate the ratio to fit the image onto the A4 page
+                const ratio = Math.min(pdfWidth / canvasWidth, pdfHeight / canvasHeight);
+                const imgWidth = canvasWidth * ratio;
+                const imgHeight = canvasHeight * ratio;
+
+                pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                
+                // Use patient's name or ID for the filename
+                const fileName = `EchoReport_${formData['Name'] || formData['ID'] || 'Patient'}.pdf`;
+                pdf.save(fileName);
+            });
+    };
+
     // --- REFACTORED: Data preparation for rendering ---
     // Group ALL fields (including conditional ones) into sections.
     const sections = FORM_FIELDS.reduce((acc, field) => {
@@ -115,6 +155,10 @@ const EchoReportForm = () => {
     // --- JSX RETURN (THE FORM LAYOUT) ---
     return (
         <div className="echo-report-container">
+
+ <div style={{ position: 'absolute', left: '-9999px', top: 'auto' }}>
+                <ReportTemplate ref={reportTemplateRef} formData={formData} />
+            </div>
 
             <h1>New Echo Report Entry</h1>
             <p className="description">Enter the patient's demographic and cardiac measurement details below.</p>
@@ -160,6 +204,14 @@ const EchoReportForm = () => {
                 
                 <div className="form-actions">
                     <button type="submit" className="submit-button">Save Report</button>
+                    <button 
+                        type="button" 
+                        className="submit-button" 
+                        onClick={handleGeneratePdf}
+                        style={{ marginLeft: '15px', backgroundColor: '#00a0b0' }}
+                    >
+                        Generate PDF
+                    </button>
                 </div>
             </form>
         </div>
