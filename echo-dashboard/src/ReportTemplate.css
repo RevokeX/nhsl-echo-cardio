@@ -32,8 +32,13 @@ h2 {
   color: #3b749d;
   border-bottom: 2px solid #e0e5e8;
   padding-bottom: 5px;
-  margin-top: 20px;
+  margin-top: 15px;
   margin-bottom: 15px;
+  font-size: 1.3em;
+}
+
+.done-by {
+  color: #3b749d;
   font-size: 1.3em;
 }
 

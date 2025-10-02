@@ -35,7 +35,8 @@ const ReportTemplate = React.forwardRef(({ formData }, ref) => {
   return (
     <div ref={ref} className="report-container">
       <header className="report-header">
-        <h1>Echocardiography Report</h1>
+        <h1>Echocardiography Report
+        <br/>Unit 2 - Institute of Cardiology - National Hospital of Sri Lanka</h1>
         <hr />
       </header>
       
@@ -67,6 +68,7 @@ const ReportTemplate = React.forwardRef(({ formData }, ref) => {
       })}
 
       <footer className="report-footer">
+                <div className='done-by'>Done by : Dr. Leonard Wanninayake </div><br />
         Report generated on: {new Date().toLocaleDateString('en-GB')}
       </footer>
     </div>
