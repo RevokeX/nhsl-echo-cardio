@@ -82,7 +82,7 @@ const EchoReportForm = () => {
         setSubmissionMessage(null);
     }, []);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         // 1. Basic Validation
@@ -102,8 +102,26 @@ const EchoReportForm = () => {
         }
 
         // --- SUCCESS ---
-        console.log('--- Form Data Submitted (Plain React, Scores Calculated) ---', formData);
-        setSubmissionMessage({ type: 'success', text: 'Echo Report details submitted successfully! (Check console for data)' });
+        // console.log('--- Form Data Submitted (Plain React, Scores Calculated) ---', formData);
+        // setSubmissionMessage({ type: 'success', text: 'Echo Report details submitted successfully! (Check console for data)' });
+        try {
+            const response = await fetch('http://localhost:5000/api/reports', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ formData })
+            });
+        
+            const result = await response.json();
+        
+            if (response.ok) {
+              setSubmissionMessage({ type: 'success', text: 'Report saved successfully to local database!' });
+            } else {
+              throw new Error(result.message);
+            }
+          } catch (err) {
+            console.error('Error saving report:', err);
+            setSubmissionMessage({ type: 'error', text: 'Failed to save report.' });
+          }
     };
 
     // --- NEW: PDF Generation Handler ---
