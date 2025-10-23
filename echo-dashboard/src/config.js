@@ -1,7 +1,7 @@
 // src/config.js
 
 // --- SECTION HEADINGS ---
-export const PATIENT_INFO_HEADING = 'Patient Information';
+export const GENERAL_INFO_HEADING = 'General Information';
 export const LV_DIMENSIONS_HEADING = 'LV Dimensions and Systolic Assessment';
 export const DIASTOLIC_HEADING = 'LV Diastolic Function Assessment';
 export const CHAMBER_HEADING = 'Chamber Dimensions and Function';
@@ -11,6 +11,7 @@ export const TRICUSPID_HEADING = 'Tricuspid Valve Assessment';
 export const PULMONARY_HEADING = 'Pulmonary Valve Assessment';
 export const SEPTAL_HEADING = 'Septal Assessment';
 export const SUMMARY_HEADING = 'Report Summary and Recommendations';
+export const PERICARDIUM = 'Pericardium Assessment';
 
 // --- CONDITIONAL CONSTANTS (RE-EXPORTED FOR COMPATIBILITY) ---
 export const INTERVENTION_OPTION_VALUE = 'Post cardiac intervention (CABG, ASD D/C, PTMC)';
@@ -25,16 +26,18 @@ const EFFUSION_OPTIONS = [
 
 // --- FORM FIELD DEFINITION ---
 export const FORM_FIELDS = [
-    // --- Patient Information ---
-    { name: 'Name', label: 'Patient Name', type: 'text', section: PATIENT_INFO_HEADING, isConditional: false, placeholder: 'Enter full name'},
-    { name: 'ID', label: 'Clinic ID', type: 'text', section: PATIENT_INFO_HEADING, isConditional: false, placeholder: 'Enter clinic ID or number'},
-    { name: 'DOB', label: 'Date of Birth', type: 'date', section: PATIENT_INFO_HEADING, isConditional: false },
-    { name: 'Age', label: 'Age', type: 'number', section: PATIENT_INFO_HEADING, isConditional: false, disabled: true, tooltip: 'Autofilled from DOB.'},
+    // --- General Information  ---
+    {name: 'Operator', label:'Operator',type:'text',section:GENERAL_INFO_HEADING,isConditional:false,placeholder:'Enter operator name'},
+    {name:'Date of Study',label:'Date of Study',type:'date',section:GENERAL_INFO_HEADING,isConditional:false},
+    { name: 'Name', label: 'Patient Name', type: 'text', section: GENERAL_INFO_HEADING, isConditional: false, placeholder: 'Enter full name'},
+    { name: 'ID', label: 'Clinic ID', type: 'text', section: GENERAL_INFO_HEADING, isConditional: false, placeholder: 'Enter clinic ID or number'},
+    { name: 'DOB', label: 'Date of Birth', type: 'date', section: GENERAL_INFO_HEADING, isConditional: false },
+    { name: 'Age', label: 'Age', type: 'number', section: GENERAL_INFO_HEADING, isConditional: false, disabled: true, tooltip: 'Autofilled from DOB.'},
     { 
         name: 'Indication', 
         label: 'Indication', 
         type: 'select', 
-        section: PATIENT_INFO_HEADING, 
+        section: GENERAL_INFO_HEADING, 
         isConditional: false,
         options: [
             'Assessment of cardiac function for ischaemic heart disease', 
@@ -44,9 +47,9 @@ export const FORM_FIELDS = [
         ]
     },
     // Conditional Field for Indication Option 3
-    { name: 'Date of Intervention', label: 'Date of Intervention', type: 'date', section: PATIENT_INFO_HEADING, isConditional: true, conditionField: 'Indication', conditionValue: INTERVENTION_OPTION_VALUE },
+    { name: 'Date of Intervention', label: 'Date of Intervention', type: 'date', section: GENERAL_INFO_HEADING, isConditional: true, conditionField: 'Indication', conditionValue: INTERVENTION_OPTION_VALUE },
     // Conditional Field for Indication Option 4
-    { name: 'Pre-Op Specify', label: 'Pre-Op Specify', type: 'text', section: PATIENT_INFO_HEADING, isConditional: true, conditionField: 'Indication', conditionValue: PRE_OP_OPTION_VALUE, placeholder: 'Specify pre-operative assessment details'},
+    { name: 'Pre-Op Specify', label: 'Pre-Op Specify', type: 'text', section: GENERAL_INFO_HEADING, isConditional: true, conditionField: 'Indication', conditionValue: PRE_OP_OPTION_VALUE, placeholder: 'Specify pre-operative assessment details'},
 
     // --- LV Dimentions and Systolic Assessment ---
     { name: 'LV EDD', label: 'LV EDD', type: 'number', section: LV_DIMENSIONS_HEADING, isConditional: false, suffix: 'mm'},
@@ -54,7 +57,7 @@ export const FORM_FIELDS = [
     { name: 'IVSd', label: 'IVSd', type: 'number', section: LV_DIMENSIONS_HEADING, isConditional: false, suffix: 'mm'},
     { name: 'pwD', label: 'LVPWd', type: 'number', section: LV_DIMENSIONS_HEADING, isConditional: false, suffix: 'mm'},
     { name: 'EF', label: 'EF', type: 'number', section: LV_DIMENSIONS_HEADING, isConditional: false, suffix: '%'},
-    { name: 'RWMA', label: 'RWMA', type: 'select', section: LV_DIMENSIONS_HEADING, isConditional: false,
+    { name: 'RWMA', label: 'RWMA', type: 'multiselect', section: LV_DIMENSIONS_HEADING, isConditional: false,
         options: ['None', 'Anterior', 'Septal', 'Lateral', 'Apical', 'Inferior', 'Posterior', 'Basal']
     },
     { name: 'LV cavity', label: 'LV cavity', type: 'select', section: LV_DIMENSIONS_HEADING, isConditional: false,
@@ -295,7 +298,7 @@ export const FORM_FIELDS = [
     { name: 'IVS Special Comments', label: 'Special comments', type: 'text', section: SEPTAL_HEADING, isConditional: false, placeholder: 'Specify findings on Interventricular Septum'},
 
     // --- Report Summary and Recommendations ---
-    { name: 'Pericardium', label: 'Pericardium', type: 'select', section: SUMMARY_HEADING, isConditional: false,
+    { name: 'Pericardium', label: 'Pericardium', type: 'select', section: PERICARDIUM, isConditional: false,
         options: ['No effusion', ...EFFUSION_OPTIONS]
     },
     // Conditional Effusion Measurements

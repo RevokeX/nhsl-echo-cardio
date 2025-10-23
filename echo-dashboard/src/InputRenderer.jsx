@@ -4,6 +4,7 @@
  * arrays in the conditionValue property from config.js.
  */
 import React from 'react';
+import Select from 'react-select';
 
 const InputRenderer = ({ field, formData, handleChange }) => {
     const { 
@@ -94,6 +95,53 @@ const InputRenderer = ({ field, formData, handleChange }) => {
                 </select>
             );
             break;
+
+        // ✅ Modern Multi-select using React Select
+        case 'multiselect':
+            inputElement = (
+                <Select
+                    isMulti
+                    isDisabled={disabled}
+                    name={fieldName}
+                    placeholder={placeholder || 'Select options...'}
+                    value={(formData[fieldName] || []).map(val => ({ value: val, label: val }))}
+                    options={options.map(opt => ({ value: opt, label: opt }))}
+                    onChange={(selected) => {
+                        handleChange({
+                            target: {
+                                name: fieldName,
+                                value: selected ? selected.map(s => s.value) : []
+                            }
+                        });
+                    }}
+                    styles={{
+                        control: (base) => ({
+                            ...base,
+                            borderRadius: '10px',
+                            borderColor: '#ccc',
+                            minHeight: '38px',
+                            boxShadow: 'none',
+                            '&:hover': { borderColor: '#999' },
+                        }),
+                        multiValue: (base) => ({
+                            ...base,
+                            backgroundColor: '#e6f3ff',
+                        }),
+                        multiValueLabel: (base) => ({
+                            ...base,
+                            color: '#004c99',
+                            fontWeight: 500,
+                        }),
+                        multiValueRemove: (base) => ({
+                            ...base,
+                            color: '#004c99',
+                            ':hover': { backgroundColor: '#004c99', color: 'white' },
+                        }),
+                    }}
+                />
+            );
+            break;
+        
 
         default:
             inputElement = <input type="text" {...commonProps} />;

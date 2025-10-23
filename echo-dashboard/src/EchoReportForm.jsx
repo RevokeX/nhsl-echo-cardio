@@ -11,7 +11,7 @@ import {
     initialFormState, 
     INTERVENTION_OPTION_VALUE,
     PRE_OP_OPTION_VALUE,
-    PATIENT_INFO_HEADING,
+    GENERAL_INFO_HEADING,
     LV_DIMENSIONS_HEADING,
     SUMMARY_HEADING
 } from './config';
@@ -173,7 +173,7 @@ const EchoReportForm = () => {
         });
     };
 
-    // --- REFACTORED: Data preparation for rendering ---
+
     // Group ALL fields (including conditional ones) into sections.
     const sections = FORM_FIELDS.reduce((acc, field) => {
         const sectionName = field.section;
