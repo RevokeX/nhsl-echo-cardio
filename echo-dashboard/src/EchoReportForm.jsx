@@ -49,12 +49,12 @@ const EchoReportForm = () => {
     const reportTemplateRef = useRef(null);
 
     // --- EFFECTS (Unchanged) ---
-    useEffect(() => {
-        const age = calculateAge(formData['DOB']);
-        if (age.toString() !== formData['Age']) {
-            setFormData(prevData => ({ ...prevData, 'Age': age.toString() }));
-        }
-    }, [formData['DOB'], formData['Age']]);
+    // useEffect(() => {
+    //     const age = calculateAge(formData['DOB']);
+    //     if (age.toString() !== formData['Age']) {
+    //         setFormData(prevData => ({ ...prevData, 'Age': age.toString() }));
+    //     }
+    // }, [formData['DOB'], formData['Age']]);
 
     useEffect(() => {
         let total = 0;

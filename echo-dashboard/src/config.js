@@ -32,7 +32,7 @@ export const FORM_FIELDS = [
     { name: 'Name', label: 'Patient Name', type: 'text', section: GENERAL_INFO_HEADING, isConditional: false, placeholder: 'Enter full name'},
     { name: 'ID', label: 'Clinic ID', type: 'text', section: GENERAL_INFO_HEADING, isConditional: false, placeholder: 'Enter clinic ID or number'},
     { name: 'DOB', label: 'Date of Birth', type: 'date', section: GENERAL_INFO_HEADING, isConditional: false },
-    { name: 'Age', label: 'Age', type: 'number', section: GENERAL_INFO_HEADING, isConditional: false, disabled: true, tooltip: 'Autofilled from DOB.'},
+    { name: 'Age', label: 'Age', type: 'number', section: GENERAL_INFO_HEADING, isConditional: false, disabled: false, tooltip: 'Autofilled from DOB.'},
     { 
         name: 'Indication', 
         label: 'Indication', 

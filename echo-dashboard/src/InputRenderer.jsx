@@ -13,7 +13,7 @@ const InputRenderer = ({ field, formData, handleChange }) => {
     } = field;
     
     const fieldName = name;
-    const isRequired = ['Name', 'ID', 'DOB'].includes(fieldName); 
+    const isRequired = ['Name', 'ID'].includes(fieldName); 
 
     // --- Conditional Rendering Logic ---
     const shouldRender = () => {
